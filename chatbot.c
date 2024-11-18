@@ -191,6 +191,7 @@ int chatbot_do_save(int inc, char* inv[], char* response, int n)
     FILE* openfile = fopen("ICT1503C_Project_Sample.ini", "w");
 
     // Write knowledge to file
+    knowledge_sort();
     knowledge_write(openfile);
     fflush(openfile);
     snprintf(response, n, "My knowledge has been saved");

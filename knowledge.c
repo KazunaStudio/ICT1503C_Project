@@ -105,6 +105,14 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
         return KB_NOMEM;  // Return error if memory allocation fails
     }
 
+    for (int i = 0; i < knowledge_count; i++) {
+        if (strcmp(knowledge_base[i].intent, intent) == 0 &&
+            strcmp(knowledge_base[i].entity, entity) == 0) {
+            printf("Duplicate detected. Skipping: %s=%s\n", entity, response);
+            return 1; // Duplicate entry found
+        }
+    }
+
     // Add the new entry
     strncpy(knowledge_base[knowledge_count].intent, intent, MAX_INTENT);
     strncpy(knowledge_base[knowledge_count].entity, entity, MAX_ENTITY);
@@ -155,8 +163,20 @@ void knowledge_reset() {
     knowledge_count = 0;
 }
 
+void knowledge_sort() {
+    for (int i = 0; i < knowledge_count - 1; i++) {
+        for (int j = i + 1; j < knowledge_count; j++) {
+            if (strcmp(knowledge_base[i].intent, knowledge_base[j].intent) > 0) {
+                KnowledgeEntry temp = knowledge_base[i];
+                knowledge_base[i] = knowledge_base[j];
+                knowledge_base[j] = temp;
+            }
+        }
+    }
+}
+
 void knowledge_write(FILE *f) {
-    printf("Writing knowledge to file...\n");  // Debug print
+    printf("Writing knowledge to file...\n");
 
     const char *current_intent = NULL;
     for (int i = 0; i < knowledge_count; i++) {
@@ -165,9 +185,6 @@ void knowledge_write(FILE *f) {
             current_intent = knowledge_base[i].intent;
         }
         fprintf(f, "%s=%s\n", knowledge_base[i].entity, knowledge_base[i].response);
-        printf("Writing: %s=%s\n", knowledge_base[i].entity, knowledge_base[i].response);  // Debug print
     }
 }
-
-
 
