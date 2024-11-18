@@ -188,7 +188,7 @@ int chatbot_do_save(int inc, char* inv[], char* response, int n)
     char* overflow = "It is too overwhelming...";
 
     // Open file for writing (create or overwrite)
-    FILE* openfile = fopen("ICT1503C_Project_Sample.ini", "w");
+    FILE* openfile = fopen("ICT1503C_Project.ini", "w");
 
     // Write knowledge to file
     knowledge_sort();
